@@ -1,0 +1,53 @@
+/*
+ * SAMSUNG SMDK2440 board device tree source
+ *
+ * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+#include "s3c2440.dtsi"
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/gpio/gpio.h>
+//#include <dt-bindings/dma/s3c2440_dma_ch.h>
+
+/ {
+	model = "JZ2440";
+	compatible = "samsung,s3c2440", "samsung,jz2440";
+
+	aliases {
+	};
+
+	memory {
+		reg =  <0x30000000 0x34000000>;
+	};
+
+	chosen {
+		//bootargs = "root=/dev/ram0 rw rootfstype=ext2 console=ttySAC0,115200n8 init=/linuxrc ignore_loglevel earlyprintk";
+		bootargs = "root=/dev/nfs nfsroot=192.168.3.48:/source/rootfs ip=192.168.3.222 console=ttySAC0,115200 ignore_loglevel earlyprintk";
+	};
+
+	srom-cs4@20000000 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		reg = <0x20000000 0x8000000>;
+		ranges;
+
+		ethernet@20000000 {
+			compatible = "davicom,dm9000";
+			reg = <0x20000000 0x2 0x20000004 0x2>;
+			interrupt-parent = <&gpf>;
+			interrupts = <7 IRQ_TYPE_EDGE_RISING>;
+			local-mac-address = [00 00 de ad be ef];
+			davicom,no-eeprom;
+		};
+	};
+};
+&uart0 {
+	status = "okay";
+};
+
